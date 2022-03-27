@@ -107,6 +107,12 @@ export default {
     this.isMobile = Bowser.getParser(window.navigator.userAgent).parsedResult.platform.type !== 'desktop'
     this.initOgl()
     window.addEventListener('wheel', this.scrollListen.bind(this), false, false)
+
+    document.querySelector('body').style.setProperty('--vh', `${vh}px`)
+    window.addEventListener('resize', () => {
+      const vh = window.innerHeight * 0.01
+      this.$el.style.setProperty('--vh', `${vh}px`)
+    })
     import('../../assets/js/mouse').then((el) => {
       this.Mouse = el.default
       
