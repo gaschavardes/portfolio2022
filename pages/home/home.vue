@@ -280,6 +280,7 @@ export default {
       mesh.link = el.link
       // mesh.rotation.set(0.8, 0, 0)
       let scale = this.isMobile ? 1 : 1.2
+      scale = 1.2
       mesh.scale.set(scale, scale * (img.naturalHeight / img.naturalWidth), 1)
       mesh.setParent(this.null)
       mesh.index = i
@@ -331,10 +332,10 @@ export default {
         const text = new Text({
             font,
             text: el.name.toUpperCase(),
-            width: this.isMobile ? 1 : 1.5,
+            width:  1.5,
             align: 'center',
             letterSpacing: 0,
-            size: this.isMobile ? 0.2 : 0.2,
+            size:  0.2,
             lineHeight: 1.1,
         });
         // Pass the generated buffers into a geometry
