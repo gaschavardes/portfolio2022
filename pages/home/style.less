@@ -65,6 +65,7 @@
         height: calc(var(--vh, 1vh) * 100);
         z-index: 100;
         overflow: scroll;
+        touch-action: none;
         
         &:before{
             content: '';
@@ -82,6 +83,7 @@
         }
 
         &.isAbout{
+            touch-action: pan-y;
             &:before{
                 backdrop-filter: blur(10px);
                 background-color: rgba(255, 255, 255, 0.2);
