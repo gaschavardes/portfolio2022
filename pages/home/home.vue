@@ -104,6 +104,7 @@ export default {
     this.on = this.emitter.on.bind(this.emitter)
     this.off = this.emitter.off.bind(this.emitter)
     this.isMobile = Bowser.getParser(window.navigator.userAgent).parsedResult.platform.type !== 'desktop'
+    this.linkLimit = this.isMobile ? 0.5 : 0.4
     this.initOgl()
     window.addEventListener('wheel', this.scrollListen.bind(this), false, false)
     
@@ -285,8 +286,8 @@ export default {
       mesh.targetFact = 0.1
       mesh.link = el.link
       // mesh.rotation.set(0.8, 0, 0)
-      let scale = this.isMobile ? 1 : 1.2
-      scale = 1.2
+      let scale = this.isMobile ? 1.5 : 1.2
+      
       mesh.scale.set(scale, scale * (img.naturalHeight / img.naturalWidth), 1)
       mesh.setParent(this.null)
       mesh.index = i
@@ -338,11 +339,11 @@ export default {
         const text = new Text({
             font,
             text: el.name.toUpperCase(),
-            width:  1.3,
+            width:  1.2,
             align: 'center',
             letterSpacing: 0,
-            size:  0.2,
-            lineHeight: 1.1,
+            size:  this.isMobile ? 0.25 : 0.2,
+            lineHeight: 1.,
         });
         // Pass the generated buffers into a geometry
         const geometry = new Geometry(this.Scene.gl, {
@@ -400,7 +401,7 @@ export default {
       }
       hits.forEach((mesh) => {
         // console.log(mesh.position.y)
-        if(mesh.position.y > -0.3 && mesh.position.y < 0.3) {
+        if(mesh.position.y > -this.linkLimit  && mesh.position.y < this.linkLimit ) {
           mesh.isHit = true
           this.currentLink = mesh.link
           console.log(this.currentLink, mesh.link)

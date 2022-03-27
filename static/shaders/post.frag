@@ -23,9 +23,9 @@ void main() {
 
     vec3 textPattern;
     if(uMobile) {
-      textPattern = texture2D(uVid, ((vidUv + vec2(0., 0.))) * 1.4).rgb;
+      textPattern = texture2D(uVid, vidUv ).rgb;
     } else {
-      textPattern = texture2D(uVid, ((vidUv + vec2(-.1, -0.1))) * 1.4).rgb;
+      textPattern = texture2D(uVid, ((vidUv + vec2(-.1, -0.))) * 1.4).rgb;
       //textPattern = texture2D(uVid, vidUv).rgb;
     }
     vec3 text1 = texture2D(tMap, vUv).rgb;
