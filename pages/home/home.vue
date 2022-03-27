@@ -21,6 +21,7 @@
       </transition>
       </div>
       
+      <a class='projectLink' target='_blank' v-show='currentLink' :href="currentLink"></a>
     
       <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
@@ -91,6 +92,7 @@ export default {
       planes: [],
       texts: [],
       videos: [],
+      currentLink: null,
       videoFile: pattern,
       isAbout: false
     }
@@ -391,17 +393,22 @@ export default {
       // if (hits.length) console.log(hits[0].hit.uv);
 
       // Update our feedback using this array
-      this.currenLink = null
+      this.currentLink = null
       if(hits.length === 0) {
         this.$el.classList.remove('clickable')
         this.hoverItem = undefined
       }
       hits.forEach((mesh) => {
-        mesh.isHit = true
-        this.currenLink = mesh.link
-        this.hoverItem = mesh.index
-        mesh.targetFact = 0.3
-        this.$el.classList.add('clickable')
+        // console.log(mesh.position.y)
+        if(mesh.position.y > -0.3 && mesh.position.y < 0.3) {
+          mesh.isHit = true
+          this.currentLink = mesh.link
+          console.log(this.currentLink, mesh.link)
+          this.hoverItem = mesh.index
+          mesh.targetFact = 0.3
+          this.$el.classList.add('clickable')
+        }
+
       });
     },
 

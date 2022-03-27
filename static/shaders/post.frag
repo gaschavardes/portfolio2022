@@ -4,7 +4,7 @@ varying vec3 vNormal;
 uniform bool uMobile;
 uniform sampler2D tMap;
 uniform sampler2D tMap1;
-uniform sampler2D uVid;
+uniform sampler2D uVid;x
 uniform vec2 u_mapResolution;
 uniform float uLight;
 uniform float uOpacity;
@@ -25,7 +25,7 @@ void main() {
     if(uMobile) {
       textPattern = texture2D(uVid, ((vidUv + vec2(0., 0.))) * 1.4).rgb;
     } else {
-      textPattern = texture2D(uVid, ((vidUv + vec2(-.25, -0.25))) * 2.).rgb;
+      textPattern = texture2D(uVid, ((vidUv + vec2(-.25, -0.25))) * 1.8).rgb;
     }
     vec3 text1 = texture2D(tMap, vUv).rgb;
     vec3 text2 = texture2D(tMap1, vUv).rgb;
