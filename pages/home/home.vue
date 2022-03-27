@@ -5,6 +5,7 @@
       <span :class='{show : isAbout }' v-html="spanify('close')"></span>
     </button>
     <div class="first-screen" :class='{isAbout : isAbout }' >
+      <div class="first-screen-container">
       <h1 :class='{show : !scrollBegin || isAbout }' v-html="spanify('Gaspard Chavardes')"></h1>
       <p :class='{show : !scrollBegin || isAbout }' v-html="spanify('Creative developper', true, 0.02)">Creative developper</p>
       <transition name="fade" >
@@ -14,16 +15,12 @@
             <p> I'm Gaspard, a french creative developper working in Paris. I enjoy working on innovative projects that shape the way people see brands or institutions.</p>
             <p>Always reducing the gap between 3D immersive experiments and institutional or e-commerce websites in order to create an emotional impact while providing the best user experience possible.</p>
             <p>Currently working at Hands Agency, I had the chance to work previously at Hello Monday ands 84 Paris.</p>
-            <p>Feel free to ping me for some freelance work ! </p>
+            <p>Feel free to <a href="mailto:chavardes.gaspard@gmail.com"> ping me </a> for some freelance work ! </p>
           </div>
-        
-          <ul>
-            <li><a href="mailto:chavardes.gaspard@gmail.com">Contact</a></li>
-            <li><a href=""></a> </li>
-            <li></li>
-          </ul>
         </div>
       </transition>
+      </div>
+      
     
       <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
