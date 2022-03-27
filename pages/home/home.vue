@@ -25,7 +25,7 @@
         </div>
       </transition>
     
-      <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin }'>Scroll to the projects</button>
+      <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
     <video ref='video' :src='videoFile' muted='true' autoplay='true' loop="true"></video>
     <video ref='projectVideo' v-for="(el, i) in videos" :key="i" :src="`/video/${el}.mp4`"  muted='true' autoplay='true' loop="true"></video>
@@ -332,7 +332,7 @@ export default {
         const text = new Text({
             font,
             text: el.name.toUpperCase(),
-            width:  1.5,
+            width:  1.3,
             align: 'center',
             letterSpacing: 0,
             size:  0.2,
