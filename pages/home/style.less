@@ -25,7 +25,7 @@
     }
 
     .about-btn{
-        position: absolute;
+        position: fixed;
         right: 10px;
         transform: rotate(-90deg);
         transform-origin: 100% 100%;
@@ -50,7 +50,7 @@
 
     button{
         font-family: 'Oswald', sans-serif;
-        color: @black;
+        color: black;
     }
 
     .first-screen{
@@ -63,6 +63,7 @@
         // padding-top: 75px;
         height: 100vh;
         z-index: 100;
+        overflow: scroll;
         
         &:before{
             content: '';

@@ -1,10 +1,10 @@
 <template>
   <div class="tpl-home">
+     <button class="about-btn" @click="toggleAbout">
+      <span :class='{show : !isAbout }' v-html="spanify('about')"></span>
+      <span :class='{show : isAbout }' v-html="spanify('close')"></span>
+    </button>
     <div class="first-screen" :class='{isAbout : isAbout }' >
-      <button class="about-btn" @click="toggleAbout">
-        <span :class='{show : !isAbout }' v-html="spanify('about')"></span>
-        <span :class='{show : isAbout }' v-html="spanify('close')"></span>
-      </button>
       <h1 :class='{show : !scrollBegin || isAbout }' v-html="spanify('Gaspard Chavardes')"></h1>
       <p :class='{show : !scrollBegin || isAbout }' v-html="spanify('Creative developper', true, 0.02)">Creative developper</p>
       <transition name="fade" >
