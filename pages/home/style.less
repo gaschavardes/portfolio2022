@@ -59,8 +59,8 @@
         transform: translateX(-50%);
         width: calc(100% - 100px);
         padding: 0px 50px;
-        padding-top: 75px;
-        height: calc(100vh - 75px);
+        // padding-top: 75px;
+        height: 100vh;
         z-index: 100;
         
         &:before{
@@ -88,7 +88,7 @@
         @media @mobile {
             width: calc(100% - 40px);
             padding: 0px 20px;
-            padding-top: 75px;
+            // padding-top: 75px
         }
 
         .content{
@@ -107,9 +107,11 @@
             font-family: 'Oswald', sans-serif;
             font-size: 100px;
             max-width: 600px;
+            padding-top: 100px;
 
             @media @mobile {
                 font-size: 70px;
+                padding-top: 75px;
             }
             .word{
                 display: block;
