@@ -311,6 +311,9 @@ export default {
       // this.texture2 = new Texture(this.Scene.gl)
       
       });
+      document.querySelectorAll('video').forEach((el, i) => {
+        el.play()
+      })
     },
     initTexts() {
       this.textureFont = new Texture(this.Scene.gl), {
