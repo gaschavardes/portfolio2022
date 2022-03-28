@@ -307,6 +307,10 @@ export default {
           let videoSize = this.$refs.projectVideo[0].getBoundingClientRect()
           planeProgram.uniforms.u_resolution.value = new Vec2(videoSize.width, videoSize.height)
           mesh.scale.set(scale, scale * (videoSize.height / videoSize.width) , 1)
+          console.log(document.querySelectorAll('video'))
+          document.querySelectorAll('video').forEach((el, i) => {
+            el.play()
+          })
         }, 300)
       } 
       this.emitter.emit('plane-created')
@@ -314,9 +318,7 @@ export default {
       // this.texture2 = new Texture(this.Scene.gl)
       
       });
-      document.querySelectorAll('video').forEach((el, i) => {
-        el.play()
-      })
+      
     },
     initTexts() {
       this.textureFont = new Texture(this.Scene.gl), {
