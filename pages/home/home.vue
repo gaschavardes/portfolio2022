@@ -1,5 +1,5 @@
 <template>
-  <div class="tpl-home">
+  <div class="tpl-home" @touchstart="launchMobileVid">
      <button class="about-btn" @click="toggleAbout">
       <span :class='{show : !isAbout }' v-html="spanify('about')"></span>
       <span :class='{show : isAbout }' v-html="spanify('close')"></span>
@@ -307,10 +307,7 @@ export default {
           let videoSize = this.$refs.projectVideo[0].getBoundingClientRect()
           planeProgram.uniforms.u_resolution.value = new Vec2(videoSize.width, videoSize.height)
           mesh.scale.set(scale, scale * (videoSize.height / videoSize.width) , 1)
-          console.log(document.querySelectorAll('video'))
-          document.querySelectorAll('video').forEach((el, i) => {
-            el.play()
-          })
+        
         }, 300)
       } 
       this.emitter.emit('plane-created')
@@ -319,6 +316,13 @@ export default {
       
       });
       
+    },
+    launchMobileVid() {
+      console.log(document.querySelectorAll('video'))
+      document.querySelectorAll('video').forEach((el, i) => {
+        console.log(el.paused)
+        el.play()
+      })
     },
     initTexts() {
       this.textureFont = new Texture(this.Scene.gl), {
@@ -435,6 +439,7 @@ export default {
     this.post.texture = texture
     this.post.setParent(this.Scene.scene)
     },
+
 
   scrollListen (e) {
     if(!this.introEnded || this.isAbout) return
