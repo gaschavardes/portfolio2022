@@ -494,7 +494,7 @@ export default {
 
       //el.position.z = (el.position.z) - (el.position.z - el.targetPos ) * 0.1
       el.program.uniforms.uTime.value = this.time * 0.01
-      el.program.uniforms.uYDistort.value = this.clamp((this.scrollTarget - this.scroll)* 0.0002, -0.3, 0.3)
+      el.program.uniforms.uYDistort.value = this.clamp((this.scrollTarget - this.scroll)* 0.0002, -0.1, 0.1)
       
       if(el.video) {
         el.program.uniforms.tMap.value.image = this.$refs.projectVideo[el.video - 1]
