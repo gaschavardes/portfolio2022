@@ -265,7 +265,7 @@ export default {
               value: 0
             },
             uZFact: {
-              value: 0.1
+              value: 0.15
             },
             uNormalScale: { value: 2 },
             uNormalUVScale: { value: 1 },
@@ -381,7 +381,7 @@ export default {
 
       this.planes.forEach((mesh) => {
         mesh.isHit = false
-        mesh.targetFact = 0.1
+        mesh.targetFact = 0.15
       });
 
       const hits = this.raycast.intersectBounds(this.planes);
