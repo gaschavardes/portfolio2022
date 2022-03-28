@@ -8,57 +8,57 @@
             "link": "https://airshifumi.hands.agency/"
         },
         {
-            "name": "Air Bla bla Shifumi",
+            "name": "Bompard Shoppable Experience",
+            "media": "bompard",
+            "type": "video",
             "image": "airshifumi/airshifumi.png",
+            "link": "https://experience.eric-bompard.com/",
             "content": {
 
             }
         },
         {
-            "name": "Air Shifumi",
+            "name": "Palais de tokyo",
+            "media": "palaisdetokyo",
+            "type": "video",
             "image": "airshifumi/airshifumi.png",
+            "link": "https://palaisdetokyo.com/",
             "content": {
 
             }
         },
         {
-            "name": "Air Shifumi",
+            "name": "27 lisboa",
+            "media": "27lisboa",
+            "type": "video",
             "image": "airshifumi/airshifumi.png",
+            "link": "https://27lisboa.com/",
             "content": {
 
             }
         },
         {
-            "name": "Air Shifumi",
+            "name": "Jeu de paume",
+            "media": "jeudepaume",
+            "type": "video",
             "image": "airshifumi/airshifumi.png",
+            "link": "https://jeudepaume.org/",
             "content": {
 
             }
         },
         {
-            "name": "Air Shifumi",
-            "image": "airshifumi/airshifumi.png",
+            "name": "Lab 1",
+            "image": "furidays.png",
+            "link": "https://reverent-neumann-6228ac.netlify.app/",
             "content": {
 
             }
         },
         {
-            "name": "Air Shifumi",
-            "image": "airshifumi/airshifumi.png",
-            "content": {
-
-            }
-        },
-        {
-            "name": "Air Shifumi",
-            "image": "airshifumi/airshifumi.png",
-            "content": {
-
-            }
-        },
-        {
-            "name": "Air Shifumi",
-            "image": "airshifumi/airshifumi.png",
+            "name": "Lab 2",
+            "image": "mobius.png",
+            "link": "https://mystifying-aryabhata-929c52.netlify.app/",
             "content": {
 
             }

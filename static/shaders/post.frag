@@ -37,7 +37,7 @@ void main() {
     vec3 video = vec3(1.) - textPattern.rgb;
     //gl_FragColor.rgb = video;
     gl_FragColor.rgb = 
-    text1 * (alpha1 - alpha2 + (alpha2 * alpha1) * textPattern.r * text2 ) +
+    text1 * (alpha1 - alpha2 + (alpha2 * alpha1) * textPattern.r * text2 ) * 0.8 +
     + (1.) * (alpha2 - text2.r)
     + (alpha2 - alpha1) * alpha2 * vec3(0.)
     + (alpha2 * alpha1) * video 
