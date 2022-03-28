@@ -8,6 +8,7 @@ uniform mat4 modelMatrix;
 uniform mat4 projectionMatrix;
 uniform mat3 normalMatrix;
 uniform float progress;
+uniform float uYDistort;
 uniform float uTime;
 uniform float uZFact;
 varying vec2 vUv;
@@ -81,7 +82,7 @@ void main() {
 
     vec3 newPos = position;
     newPos.z = position.z + n * uZFact;
-    // newPos.y = position.y - n * 0.2;
+    newPos.y = position.y - n * uYDistort;
 
     vNormal = normalize(normalMatrix * normal);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);

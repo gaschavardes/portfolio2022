@@ -255,6 +255,9 @@ export default {
             u_mapResolution: {
               value: new Vec2(window.innerWidth, window.innerHeight)
             },
+            uYDistort: {
+              value: 0
+            },
             u_resolution: {
               value: new Vec2(0, 0)
             },
@@ -374,40 +377,22 @@ export default {
       this.mouse.set(2.0 * (e.x / this.Scene.renderer.width) - 1.0, 2.0 * (1.0 - e.y / this.Scene.renderer.height) - 1.0);
       this.raycast.castMouse(this.Scene.camera, this.mouse);
 
-      // Just for the feedback in this example - reset each mesh's hit to false
       this.planes.forEach((mesh) => {
         mesh.isHit = false
         mesh.targetFact = 0.1
       });
 
-      // raycast.intersectBounds will test against the bounds of each mesh, and
-      // return an array of intersected meshes in order of closest to farthest
       const hits = this.raycast.intersectBounds(this.planes);
 
-      // Can intersect with geometry if the bounds aren't enough, or if you need
-      // to find out the uv or normal value at the hit point.
-      // Optional arguments include backface culling `cullFace`, and `maxDistance`
-      // Both useful for doing early exits to help optimise.
-      // const hits = raycast.intersectMeshes(meshes, {
-      //     cullFace: true,
-      //     maxDistance: 10,
-      //     includeUV: true,
-      //     includeNormal: true,
-      // });
-      // if (hits.length) console.log(hits[0].hit.uv);
-
-      // Update our feedback using this array
       this.currentLink = null
       if(hits.length === 0) {
         this.$el.classList.remove('clickable')
         this.hoverItem = undefined
       }
       hits.forEach((mesh) => {
-        // console.log(mesh.position.y)
         if(mesh.position.y > -this.linkLimit  && mesh.position.y < this.linkLimit ) {
           mesh.isHit = true
           this.currentLink = mesh.link
-          console.log(this.currentLink, mesh.link)
           this.hoverItem = mesh.index
           mesh.targetFact = 0.3
           this.$el.classList.add('clickable')
@@ -417,8 +402,6 @@ export default {
     },
 
     setPost(){
-    
-
     const geometry = new Triangle(this.Scene.gl)
     const texture = new Texture(this.Scene.gl, {
       generateMipmaps: false
@@ -455,8 +438,8 @@ export default {
     if(!this.introEnded || this.isAbout) return
     if (e && this.isMobile ) {
         if(e.dragedVal){
-          console.log(e.velocity[1])
-          this.scrollTarget += -e.velocity[1] * 1300
+          // console.log(e.velocity[1])
+          this.scrollTarget += -e.velocity[1] * 2000
         }
     } else { this.scrollTarget += e.deltaY }
     if (this.scrollTarget <= -2000) {
@@ -479,77 +462,83 @@ export default {
         this.scrollBegin = false
       }})
   },
-   scrollTo() {
+  scrollTo() {
     this.scrollBegin = true
     gsap.to(this, { scroll : 0, duration: 1, ease: Power2.easeInOut, onUpdate: () => {
           this.scrollTarget = this.scroll
-      }})
+    }})
+  },
+
+  clamp(x, min, max) {
+    return Math.max(min, Math.min(x, max));
   },
     
-    update() {
-      this.time++
-      let tmp = this.scrollTarget - this.scroll
-      tmp *= 0.1
-      this.scroll += tmp
+  update() {
+    this.time++
+    let tmp = this.scrollTarget - this.scroll
+    tmp *= 0.1
+    this.scroll += tmp
 
-      let progress = this.scroll * 0.001
-      let angle = 0.1 - Math.sin(this.scroll * 0.0002) * 0.2
+    let progress = this.scroll * 0.001
+    let angle = 0.1 - Math.sin(this.scroll * 0.0002) * 0.2
+    
+    this.planes.forEach( el => {
+      el.position.y = (el.radius + progress) * Math.cos(angle) - this.Mouse.dampedCursor[1] * 0.01
+      el.position.x = (el.radius + progress) * Math.sin(angle) + this.Mouse.dampedCursor[0] * 0.01
+      el.rotation.z = -angle
+
+
+      let fact = el.targetFact - el.program.uniforms.uZFact.value
+      fact *= 0.1
+      el.program.uniforms.uZFact.value += fact
+
+      //el.position.z = (el.position.z) - (el.position.z - el.targetPos ) * 0.1
+      el.program.uniforms.uTime.value = this.time * 0.01
+      el.program.uniforms.uYDistort.value = this.clamp((this.scrollTarget - this.scroll)* 0.0002, -0.3, 0.3)
       
-      this.planes.forEach( el => {
-        el.position.y = (el.radius + progress) * Math.cos(angle) - this.Mouse.dampedCursor[1] * 0.01
-        el.position.x = (el.radius + progress) * Math.sin(angle) + this.Mouse.dampedCursor[0] * 0.01
-        el.rotation.z = -angle
+      if(el.video) {
+        el.program.uniforms.tMap.value.image = this.$refs.projectVideo[el.video - 1]
+        el.program.uniforms.tMap.value.needsUpdate = true
+      }
+    })
+    this.texts.forEach( (el, i) => {
+      // el.position.x = Math.pow(el.initialPos - progress, 1)
 
+      // el.position.y = (el.radius + progress) * Math.cos(0.1)
+      el.position.x = (el.radius - progress) * Math.cos(angle * 0.5) + this.Mouse.dampedCursor[0] * 0.02
+      el.position.y = (el.radius - progress) * Math.sin(angle * 0.5) + el.height - this.Mouse.dampedCursor[1] * 0.02
+      el.rotation.z = angle * 0.5
+      
+      let scale
+      if(i === this.hoverItem)  {
+        scale = 0.4 - el.position.z
+        scale *= 0.1
+        el.position.z += scale
+      } else {
+        scale = 0.2 - el.position.z
+        scale *= 0.1
+        el.position.z += scale
+      }
+      
+    })
 
-        let fact = el.targetFact - el.program.uniforms.uZFact.value
-        fact *= 0.1
-        el.program.uniforms.uZFact.value += fact
+    this.Scene.renderer.render({
+      scene: this.null,
+      camera: this.Scene.camera,
+      target: this.target
+    })
+    this.Scene.renderer.render({
+      scene: this.null1,
+      camera: this.Scene.camera,
+      target: this.target1
+    })
 
-        //el.position.z = (el.position.z) - (el.position.z - el.targetPos ) * 0.1
-        el.program.uniforms.uTime.value = this.time * 0.01
-        if(el.video) {
-          el.program.uniforms.tMap.value.image = this.$refs.projectVideo[el.video - 1]
-          el.program.uniforms.tMap.value.needsUpdate = true
-        }
-      })
-      this.texts.forEach( (el, i) => {
-        // el.position.x = Math.pow(el.initialPos - progress, 1)
+    // this.planeProgram.uniforms.uTime.value = this.time * 0.01
+    this.videoTexture.image = this.$refs.video
+    this.videoTexture.needsUpdate = true
 
-        // el.position.y = (el.radius + progress) * Math.cos(0.1)
-        el.position.x = (el.radius - progress) * Math.cos(angle * 0.5) + this.Mouse.dampedCursor[0] * 0.02
-        el.position.y = (el.radius - progress) * Math.sin(angle * 0.5) + el.height - this.Mouse.dampedCursor[1] * 0.02
-        el.rotation.z = angle * 0.5
-        
-        let scale
-        if(i === this.hoverItem)  {
-          scale = 0.4 - el.position.z
-          scale *= 0.1
-          el.position.z += scale
-        } else {
-          scale = 0.2 - el.position.z
-          scale *= 0.1
-          el.position.z += scale
-        }
-       
-      })
-
-      this.Scene.renderer.render({
-        scene: this.null,
-        camera: this.Scene.camera,
-        target: this.target
-      })
-      this.Scene.renderer.render({
-        scene: this.null1,
-        camera: this.Scene.camera,
-        target: this.target1
-      })
-
-      // this.planeProgram.uniforms.uTime.value = this.time * 0.01
-      this.videoTexture.image = this.$refs.video
-      this.videoTexture.needsUpdate = true
-
-    }
   }
+ }
  
 }
 </script>
