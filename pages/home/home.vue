@@ -25,8 +25,8 @@
     
       <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
-    <video ref='video' :src='videoFile' muted='true' autoplay='true' loop="true"></video>
-    <video ref='projectVideo' v-for="(el, i) in videos" :key="i" :src="`/video/${el}.mp4`"  muted='true' autoplay='true' loop="true"></video>
+    <video ref='video' :src='videoFile' muted='true' autoplay='true' loop="true" playsinline="true"></video>
+    <video ref='projectVideo' v-for="(el, i) in videos" :key="i" :src="`/video/${el}.mp4`"  muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <!-- <img :src="require(`../../static/images/${datas.projects[0].image}`)" alt=""> -->
 
     <button class='scrollTop' :class='{show : isEnd }' @click="scrollTop">scroll top</button>
@@ -320,8 +320,9 @@ export default {
     launchMobileVid() {
       console.log(document.querySelectorAll('video'))
       document.querySelectorAll('video').forEach((el, i) => {
-        console.log(el.paused)
-        el.play()
+        if(el.paused) {
+          el.play()
+        }
       })
     },
     initTexts() {
