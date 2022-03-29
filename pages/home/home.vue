@@ -621,7 +621,7 @@ export default {
         el.position.y = (el.radius - progress) * Math.sin(angle * 0.5) + el.height - this.Mouse.dampedCursor[1] * 0.02
       } else {
         el.position.x = (el.radius - progress) * Math.cos(angle * 0.5)
-        el.position.y = (el.radius - progress) * Math.sin(angle * 0.5)
+        el.position.y = (el.radius - progress) * Math.sin(angle * 0.5) + el.height
       }
       el.rotation.z = angle * 0.5
       
