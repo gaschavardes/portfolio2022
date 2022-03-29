@@ -1,5 +1,5 @@
 <template>
-  <div class="tpl-home" @touchstart="launchMobileVid">
+  <div class="tpl-home" :class='{isAbout : isAbout }' @touchstart="launchMobileVid">
      <button class="about-btn" @click="toggleAbout">
       <span :class='{show : !isAbout }' v-html="spanify('about')"></span>
       <span :class='{show : isAbout }' v-html="spanify('close')"></span>
@@ -158,6 +158,9 @@ export default {
     //   })
     toggleAbout() {
       this.isAbout = !this.isAbout
+      if(this.drag[0]){
+        this.isAbout ? this.drag[0].disable() : this.drag[0].enable()
+      }
     },
     spanify (text, inline, delay = 0.04 ) {
       const t = text.split(' ')
@@ -366,7 +369,7 @@ export default {
       })
     },
     dragUpdate(){
-      if(this.drag[0].y === 500) {
+      if(this.drag[0].y > 400) {
         this.scrollBegin = false
       } else if(this.drag[0].y <= -500 * (this.datas.projects.length - 1)) {
         this.isEnd = true
@@ -534,9 +537,18 @@ export default {
   },
   scrollTo() {
     this.scrollBegin = true
-    gsap.to(this, { scroll : 0, duration: 1, ease: Power2.easeInOut, onUpdate: () => {
-          this.scrollTarget = this.scroll
-    }})
+    if(!this.isMobile){
+      gsap.to(this, { scroll : 0, duration: 1, ease: Power2.easeInOut, onUpdate: () => {
+        this.scrollTarget = this.scroll
+      }})
+    } else {
+      gsap.to(this.$refs.proxy, { y : 0, duration: 1, ease: Power2.easeInOut,
+       onUpdate: () => {
+         this.drag[0].update()
+       },
+      })
+    }
+  
   },
 
   clamp(x, min, max) {
