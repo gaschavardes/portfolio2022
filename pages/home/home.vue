@@ -28,7 +28,7 @@
     <video ref='video' :src='videoFile' muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <video ref='projectVideo' v-for="(el, i) in videos" :key="i" :src="`/video/${el}.mp4`"  muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <!-- <img :src="require(`../../static/images/${datas.projects[0].image}`)" alt=""> -->
-
+    <div class="drag-proxy"></div>
     <button class='scrollTop' :class='{show : isEnd }' @click="scrollTop">scroll top</button>
   </div>
 </template>
@@ -53,6 +53,13 @@ import gsap, {Power2} from 'gsap'
 import pattern from '@/static/video/text-pattern.mp4'
 import airshifumi from '@/static/video/text-pattern.mp4'
 import plane from '@/static/model/plane.json'
+
+
+/* eslint-disable */
+import { Draggable } from 'gsap/Draggable'
+import InertiaPlugin from '@/assets/js/_libs/greensock/InertiaPlugin'
+gsap.registerPlugin(InertiaPlugin)
+gsap.registerPlugin(Draggable)
 
 const vertexNull = /* glsl */ `
     attribute vec3 position;
@@ -119,14 +126,18 @@ export default {
       
       // this.scrollTarget = 2500 * (this.datas.projects.length) 
       // this.scroll = 2500 * (this.datas.projects.length) 
-      // gsap.to(this, { scroll : -2500, delay: 4, duration: 3, ease: Power2.easeInOut, onComplete: () => {
-      //   this.scrollTarget = -2500
+      // gsap.to(this, { scroll : -3500, delay: 4, duration: 3, ease: Power2.easeInOut, onComplete: () => {
+      //   this.scrollTarget = -3500
+      //   this.scrollBegin = false
+
       // }})
-      gsap
+
       if(this.isMobile){
         this.Mouse.on('drag', (e) => {
-            this.scrollListen(e)
+            // this.scrollListen(e)
+            this.initDraggable()
           })
+
       }
       this.Mouse.on('move', () => {
 
@@ -308,7 +319,7 @@ export default {
           planeProgram.uniforms.u_resolution.value = new Vec2(videoSize.width, videoSize.height)
           mesh.scale.set(scale, scale * (videoSize.height / videoSize.width) , 1)
         
-        }, 300)
+        }, 1000)
       } 
       this.emitter.emit('plane-created')
       }
@@ -322,6 +333,37 @@ export default {
       document.querySelectorAll('video').forEach((el, i) => {
         if(el.paused) {
           el.play()
+        }
+      })
+    },
+
+    initDraggable() {
+      this.drag = Draggable.create('.drag-proxy', {
+        type: 'y',
+        // allowEventDefault: true,
+        dragClickables: true,
+        edgeResistance: 0.99,
+        trigger: this.$el,
+        inertia: true,
+        zIndexBoost: false,
+        throwResistance: 2000,
+        zIndex: 0,
+        dragResistance: 0.1,
+        onThrowUpdate: () => {
+          // this.dragUpdate()
+           console.log('dragg')
+        },
+        onDrag: () => {
+          console.log("dragg", this.drag[0])
+          // this.dragUpdate()
+        },
+        // snap: {
+        //   x: (endValue) => {
+        //     return Math.round(endValue / this.wi dth) * this.width
+        //   }
+        // }
+        snap: {
+          x: this.snaps
         }
       })
     },

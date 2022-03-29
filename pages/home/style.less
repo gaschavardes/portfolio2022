@@ -12,7 +12,10 @@
     height: calc(var(--vh, 1vh) * 100);
     top: 0;
     left: 0;
-    // background-color: red;
+    // background-color: black;
+    // *{
+    //     color: @white !important
+    // }
     .char-container{
         overflow: hidden;
         display: inline-block;
@@ -73,7 +76,7 @@
         height: calc(var(--vh, 1vh) * 100);
         z-index: 100;
         overflow: scroll;
-        touch-action: none;
+        // touch-action: none;
 
         &-container{
             &:before{
@@ -299,6 +302,15 @@
         }
 
        
+    }
+    .drag-proxy{
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: blue;
+        left: 0;
+        pointer-events: none;
     }
 }
 
