@@ -25,12 +25,12 @@
     
       <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
-    <a :href="currentLinkCta" v-if="isMobile"  target='_blank' :class='{show : scrollBegin && isSnapped }' class="visit-cta" v-html="spanify('Visit project', true, 0.02)"></a>
+    <a :href="currentLinkCta" v-if="isMobile"  target='_blank' :class='{show : scrollBegin && isSnapped && !isAbout }' class="visit-cta" v-html="spanify('Visit project', true, 0.02)"></a>
     <video ref='video' :src='videoFile' muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <video ref='projectVideo' v-for="(el, i) in videos" :key="i" :src="`/video/${el}.mp4`"  muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <!-- <img :src="require(`../../static/images/${datas.projects[0].image}`)" alt=""> -->
     <div ref='proxy' class="drag-proxy"></div>
-    <button class='scrollTop' :class='{show : isEnd }' @click="scrollTop">scroll top</button>
+    <button class='scrollTop' :class='{show : isEnd && !isAbout }' @click="scrollTop">scroll top</button>
   </div>
 </template>
 
@@ -358,7 +358,7 @@ export default {
         zIndexBoost: false,
         throwResistance: 5000,
         zIndex: 0,
-        dragResistance: 0.1,
+        dragResistance: 0,
         onThrowUpdate: () => {
           this.dragUpdate()
         },
@@ -584,8 +584,14 @@ export default {
 
     
     this.planes.forEach( el => {
-      el.position.y = (el.radius + progress) * Math.cos(angle) - this.Mouse.dampedCursor[1] * 0.01
-      el.position.x = (el.radius + progress) * Math.sin(angle) + this.Mouse.dampedCursor[0] * 0.01
+      if(!this.isMobile){
+        el.position.y = (el.radius + progress) * Math.cos(angle) - this.Mouse.dampedCursor[1] * 0.01
+        el.position.x = (el.radius + progress) * Math.sin(angle) + this.Mouse.dampedCursor[0] * 0.01
+      } else {
+        el.position.y = (el.radius + progress) * Math.cos(angle)
+        el.position.x = (el.radius + progress) * Math.sin(angle)
+      }
+    
       el.rotation.z = -angle
 
 
@@ -610,8 +616,13 @@ export default {
       // el.position.x = Math.pow(el.initialPos - progress, 1)
 
       // el.position.y = (el.radius + progress) * Math.cos(0.1)
-      el.position.x = (el.radius - progress) * Math.cos(angle * 0.5) + this.Mouse.dampedCursor[0] * 0.02
-      el.position.y = (el.radius - progress) * Math.sin(angle * 0.5) + el.height - this.Mouse.dampedCursor[1] * 0.02
+      if(!this.isMobile) {
+        el.position.x = (el.radius - progress) * Math.cos(angle * 0.5) + this.Mouse.dampedCursor[0] * 0.02
+        el.position.y = (el.radius - progress) * Math.sin(angle * 0.5) + el.height - this.Mouse.dampedCursor[1] * 0.02
+      } else {
+        el.position.x = (el.radius - progress) * Math.cos(angle * 0.5)
+        el.position.y = (el.radius - progress) * Math.sin(angle * 0.5)
+      }
       el.rotation.z = angle * 0.5
       
       let scale
