@@ -139,7 +139,8 @@ export default {
           })
 
       }
-      this.initDraggable()
+          this.initDraggable()
+
       this.Mouse.on('move', () => {
 
       })
@@ -339,34 +340,36 @@ export default {
     },
 
     initDraggable() {
+      console.log(-250 * (this.datas.projects.length - 1))
       this.drag = Draggable.create('.drag-proxy', {
         type: 'y',
         // allowEventDefault: true,
         dragClickables: true,
         edgeResistance: 0.99,
         trigger: this.$el,
+        bounds: {minY: -500 * (this.datas.projects.length - 1), maxY: 0},
         inertia: true,
         zIndexBoost: false,
         throwResistance: 2000,
         zIndex: 0,
         dragResistance: 0.1,
         onThrowUpdate: () => {
-          // this.dragUpdate()
-           console.log('dragg')
+          this.dragUpdate()
         },
         onDrag: () => {
-          console.log("dragg", this.drag[0])
-          // this.dragUpdate()
+          console.log(this.drag[0], this.drag[0].y)
+          this.dragUpdate()
         },
-        // snap: {
-        //   x: (endValue) => {
-        //     return Math.round(endValue / this.wi dth) * this.width
-        //   }
-        // }
         snap: {
-          x: this.snaps
+          y: (endValue) => {
+            console.log('COUCOU')
+            return Math.round(endValue / -500) * -500
+          }
         }
       })
+    },
+    dragUpdate(){
+      this.drag[0].x
     },
     initTexts() {
       this.textureFont = new Texture(this.Scene.gl), {
@@ -530,7 +533,14 @@ export default {
     tmp *= 0.1
     this.scroll += tmp
 
-    let progress = this.scroll * 0.001
+
+    let progress
+    if(!this.isMobile){
+      progress = this.scroll * 0.001
+    } else {
+      progress = -this.drag[0].y * 0.005
+    }
+
     let angle = 0.1 - Math.sin(this.scroll * 0.0002) * 0.2
     
     this.planes.forEach( el => {
