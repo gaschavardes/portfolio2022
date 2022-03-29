@@ -28,7 +28,7 @@
     <video ref='video' :src='videoFile' muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <video ref='projectVideo' v-for="(el, i) in videos" :key="i" :src="`/video/${el}.mp4`"  muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <!-- <img :src="require(`../../static/images/${datas.projects[0].image}`)" alt=""> -->
-    <div class="drag-proxy"></div>
+    <div ref='proxy' class="drag-proxy"></div>
     <button class='scrollTop' :class='{show : isEnd }' @click="scrollTop">scroll top</button>
   </div>
 </template>
@@ -331,7 +331,6 @@ export default {
       
     },
     launchMobileVid() {
-      console.log(document.querySelectorAll('video'))
       document.querySelectorAll('video').forEach((el, i) => {
         if(el.paused) {
           el.play()
@@ -340,36 +339,41 @@ export default {
     },
 
     initDraggable() {
-      console.log(-250 * (this.datas.projects.length - 1))
       this.drag = Draggable.create('.drag-proxy', {
         type: 'y',
         // allowEventDefault: true,
         dragClickables: true,
         edgeResistance: 0.99,
         trigger: this.$el,
-        bounds: {minY: -500 * (this.datas.projects.length - 1), maxY: 0},
+        bounds: {minY: -500 * (this.datas.projects.length - 1), maxY: 500},
         inertia: true,
+        minDuration:1,
         zIndexBoost: false,
-        throwResistance: 2000,
+        throwResistance: 5000,
         zIndex: 0,
         dragResistance: 0.1,
         onThrowUpdate: () => {
           this.dragUpdate()
         },
         onDrag: () => {
-          console.log(this.drag[0], this.drag[0].y)
           this.dragUpdate()
         },
         snap: {
           y: (endValue) => {
-            console.log('COUCOU')
             return Math.round(endValue / -500) * -500
           }
         }
       })
     },
     dragUpdate(){
-      this.drag[0].x
+      if(this.drag[0].y === 500) {
+        this.scrollBegin = false
+      } else if(this.drag[0].y <= -500 * (this.datas.projects.length - 1)) {
+        this.isEnd = true
+      } else{
+        this.scrollBegin = true
+        this.isEnd = false
+      }
     },
     initTexts() {
       this.textureFont = new Texture(this.Scene.gl), {
@@ -511,10 +515,22 @@ export default {
 
   scrollTop() {
     this.isEnd = false
-    gsap.to(this, { scroll : -4000, duration: 3, ease: Power2.easeInOut, onComplete: () => {
+    if(!this.isMobile){
+      gsap.to(this, { scroll : -4000, duration: 3, ease: Power2.easeInOut, onComplete: () => {
         this.scrollTarget = -2000
         this.scrollBegin = false
       }})
+    } else {
+       gsap.to(this.$refs.proxy, { y : 500, duration: 3, ease: Power2.easeInOut,
+       onUpdate: () => {
+         this.drag[0].update()
+       },
+       onComplete: () => {
+        this.scrollTarget = -500
+        this.scrollBegin = false
+      }})
+    }
+    
   },
   scrollTo() {
     this.scrollBegin = true
@@ -533,15 +549,18 @@ export default {
     tmp *= 0.1
     this.scroll += tmp
 
-
     let progress
+    let angle 
+
     if(!this.isMobile){
       progress = this.scroll * 0.001
+      angle = 0.1 - Math.sin(this.scroll * 0.0002) * 0.2
+
     } else {
       progress = -this.drag[0].y * 0.005
+      angle = 0.1 - Math.sin(-this.drag[0].y *  0.001) * 0.2
     }
 
-    let angle = 0.1 - Math.sin(this.scroll * 0.0002) * 0.2
     
     this.planes.forEach( el => {
       el.position.y = (el.radius + progress) * Math.cos(angle) - this.Mouse.dampedCursor[1] * 0.01
@@ -555,7 +574,11 @@ export default {
 
       //el.position.z = (el.position.z) - (el.position.z - el.targetPos ) * 0.1
       el.program.uniforms.uTime.value = this.time * 0.01
-      el.program.uniforms.uYDistort.value = this.clamp((this.scrollTarget - this.scroll)* 0.0002, -0.1, 0.1)
+      if(!this.isMobile) {
+        el.program.uniforms.uYDistort.value = this.clamp((this.scrollTarget - this.scroll)* 0.0002, -0.1, 0.1)
+      } else {
+        el.program.uniforms.uYDistort.value = this.clamp(this.drag[0].deltaY * 0.002, -0.1, 0.1)
+      }
       
       if(el.video) {
         el.program.uniforms.tMap.value.image = this.$refs.projectVideo[el.video - 1]
