@@ -1,5 +1,5 @@
 <template>
-  <div class="tpl-home" :class='{isAbout : isAbout }' @touchstart="launchMobileVid">
+  <div class="tpl-home" @touchstart="launchMobileVid">
      <button class="about-btn" @click="toggleAbout">
       <span :class='{show : !isAbout }' v-html="spanify('about')"></span>
       <span :class='{show : isAbout }' v-html="spanify('close')"></span>
@@ -9,8 +9,8 @@
       <h1 :class='{show : !scrollBegin || isAbout }' v-html="spanify('Gaspard Chavardes')"></h1>
       <p :class='{show : !scrollBegin || isAbout }' v-html="spanify('Creative developper', true, 0.02)">Creative developper</p>
       <transition name="fade" >
-        <div class="content" v-show="isAbout" >
-          <div class="description">
+        <div class="content" :class='{show : isAbout }' >
+          <div class="description" >
             <p> Hi there !</p>
             <p> I'm Gaspard, a french creative developper working in Paris. I enjoy working on innovative projects that shape the way people see brands or institutions.</p>
             <p>Always reducing the gap between 3D immersive experiments and institutional or e-commerce websites in order to create an emotional impact while providing the best user experience possible.</p>
@@ -162,9 +162,9 @@ export default {
     //   })
     toggleAbout() {
       this.isAbout = !this.isAbout
-      if(this.drag[0]){
-        this.isAbout ? this.drag[0].disable() : this.drag[0].enable()
-      }
+      // if(this.drag[0]){
+      //   this.isAbout ? this.drag[0].disable() : this.drag[0].enable()
+      // }
     },
     spanify (text, inline, delay = 0.04 ) {
       const t = text.split(' ')

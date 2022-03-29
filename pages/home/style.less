@@ -82,7 +82,7 @@
         z-index: 100;
         overflow: scroll;
         touch-action: none;
-
+        pointer-events: none;
         &-container{
             &:before{
                 content: '';
@@ -104,6 +104,7 @@
 
         &.isAbout{
             touch-action: pan-y;
+            pointer-events: auto;
             .first-screen-container{
                 &:before{
                     backdrop-filter: blur(10px);
@@ -120,10 +121,17 @@
         }
 
         .content{
+            opacity: 0;
+            transition: opacity 0.5s;
+            height: 0;
+             &.show{
+                opacity: 1;
+                height: auto;
+            }   
             .description{
                 max-width: 800px;
                 padding-bottom: 50px;
-
+               
                 a{
                     color: black;
                 }
