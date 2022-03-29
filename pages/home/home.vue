@@ -1,15 +1,15 @@
 <template>
   <div class="tpl-home" @touchstart="launchMobileVid">
      <button class="about-btn" @click="toggleAbout">
-      <span :class='{show : !isAbout }' v-html="spanify('about')"></span>
-      <span :class='{show : isAbout }' v-html="spanify('close')"></span>
+      <span :class='{show : !isAbout && !isIntro }' v-html="spanify('about')"></span>
+      <span :class='{show : isAbout && !isIntro }' v-html="spanify('close')"></span>
     </button>
-    <div class="first-screen" :class='{isAbout : isAbout }' >
-      <div class="first-screen-container">
+    <div class="first-screen" ref="firstScreen" :class='{isAbout : isAbout }' >
+      <div class="first-screen-container" >
       <h1 :class='{show : !scrollBegin || isAbout }' v-html="spanify('Gaspard Chavardes')"></h1>
       <p :class='{show : !scrollBegin || isAbout }' v-html="spanify('Creative developper', true, 0.02)">Creative developper</p>
       <transition name="fade" >
-        <div class="content" :class='{show : isAbout }' >
+        <div class="content" :class='{show : isAbout }' v-show="isMobile || isAbout">
           <div class="description" >
             <p> Hi there !</p>
             <p> I'm Gaspard, a french creative developper working in Paris. I enjoy working on innovative projects that shape the way people see brands or institutions.</p>
@@ -21,7 +21,7 @@
       </transition>
       </div>
       
-      <a class='projectLink' target='_blank' v-show='currentLink' :href="currentLink"></a>
+      <a class='projectLink' target='_blank' v-show='currentLink' :class="{show: currentLink}" :href="currentLink"></a>
     
       <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
@@ -50,6 +50,10 @@ import Emitter from 'event-emitter'
 import Data from '@/assets/data/data.json'
 import Bowser from 'bowser'
 import gsap, {Power2} from 'gsap'
+import { ScrollToPlugin } from '@/assets/js/_libs/greensock/ScrollToPlugin';
+
+// Register ScrollTrigger
+
 
 import pattern from '@/static/video/text-pattern.mp4'
 import airshifumi from '@/static/video/text-pattern.mp4'
@@ -57,10 +61,13 @@ import plane from '@/static/model/plane.json'
 
 
 /* eslint-disable */
+
 import { Draggable } from 'gsap/Draggable'
 import InertiaPlugin from '@/assets/js/_libs/greensock/InertiaPlugin'
 gsap.registerPlugin(InertiaPlugin)
 gsap.registerPlugin(Draggable)
+gsap.registerPlugin(ScrollToPlugin);
+
 
 const vertexNull = /* glsl */ `
     attribute vec3 position;
@@ -103,9 +110,10 @@ export default {
       currentLink: null,
       videoFile: pattern,
       isAbout: false,
-      isSnapped: true,
+      isSnapped: false,
       isMobile: false,
-      currentLinkCta: ''
+      currentLinkCta: '',
+      isIntro: true
     }
   },
   mounted() {
@@ -128,6 +136,34 @@ export default {
     import('../../assets/js/mouse').then((el) => {
       this.Mouse = el.default
       
+      if(this.isMobile){
+        this.initDraggable()
+      }
+
+      this.Mouse.on('move', () => {
+
+      })
+      if(!this.isMobile){
+        this.scrollTarget = 2500 * (this.datas.projects.length) 
+        this.scroll = 2500 * (this.datas.projects.length) 
+        gsap.to(this, { scroll : -3500, delay: 2, duration: 3, ease: Power2.easeInOut, onComplete: () => {
+          this.scrollTarget = -3500
+          this.scrollBegin = false
+          this.isIntro = false
+
+        }})
+      } else {
+        gsap.fromTo(this.$refs.proxy, {y: -(this.datas.projects.length) * 500}, {y: 500, delay: 4, duration: 3, ease: Power2.easeInOut,
+        onUpdate: () => {
+          this.isSnapped = false
+          this.drag[0].update()
+        },
+        onComplete: () => {
+          this.scrollBegin = false
+          this.isIntro = false
+        }})
+        
+      }
       // this.scrollTarget = 2500 * (this.datas.projects.length) 
       // this.scroll = 2500 * (this.datas.projects.length) 
       // gsap.to(this, { scroll : -3500, delay: 4, duration: 3, ease: Power2.easeInOut, onComplete: () => {
@@ -135,19 +171,6 @@ export default {
       //   this.scrollBegin = false
 
       // }})
-
-      if(this.isMobile){
-        this.Mouse.on('drag', (e) => {
-            // this.scrollListen(e)
-            
-          })
-
-      }
-          this.initDraggable()
-
-      this.Mouse.on('move', () => {
-
-      })
     })
   },
   methods: {
@@ -162,8 +185,12 @@ export default {
     //   })
     toggleAbout() {
       this.isAbout = !this.isAbout
-      if(this.drag[0]){
+      if(this.drag){
         this.isAbout ? this.drag[0].disable() : this.drag[0].enable()
+      }
+      if(!this.isAbout) {
+        console.log(this.$refs.firstScreen)
+        gsap.to(this.$refs.firstScreen, {duration: 0.5, delay: 0.25,  scrollTo: 0, ease: Power2.easeInOut })
       }
     },
     spanify (text, inline, delay = 0.04 ) {
@@ -325,7 +352,7 @@ export default {
         this.planes[i].video =  this.videos.length
         setTimeout(() => {
           let videoSize = this.$refs.projectVideo[0].getBoundingClientRect()
-          planeProgram.uniforms.u_resolution.value = new Vec2(videoSize.width, videoSize.height)
+          // planeProgram.uniforms.u_resolution.value = new Vec2(videoSize.width, videoSize.height)
           mesh.scale.set(scale, scale * (videoSize.height / videoSize.width) , 1)
         
         }, 1000)
