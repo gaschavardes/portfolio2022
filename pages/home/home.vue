@@ -25,6 +25,7 @@
     
       <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
+    <a :href="currentLinkCta" v-if="isMobile"  target='_blank' :class='{show : scrollBegin && isSnapped }' class="visit-cta" v-html="spanify('Visit project', true, 0.02)"></a>
     <video ref='video' :src='videoFile' muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <video ref='projectVideo' v-for="(el, i) in videos" :key="i" :src="`/video/${el}.mp4`"  muted='true' autoplay='true' loop="true" playsinline="true"></video>
     <!-- <img :src="require(`../../static/images/${datas.projects[0].image}`)" alt=""> -->
@@ -101,7 +102,10 @@ export default {
       videos: [],
       currentLink: null,
       videoFile: pattern,
-      isAbout: false
+      isAbout: false,
+      isSnapped: true,
+      isMobile: false,
+      currentLinkCta: ''
     }
   },
   mounted() {
@@ -369,6 +373,10 @@ export default {
       })
     },
     dragUpdate(){
+      this.isSnapped = (-this.drag[0].y / 500) % 1 === 0
+      if(this.datas.projects[Math.floor((-this.drag[0].y / 500))]) {
+        this.currentLinkCta = this.datas.projects[Math.floor((-this.drag[0].y / 500))].link
+      }
       if(this.drag[0].y > 400) {
         this.scrollBegin = false
       } else if(this.drag[0].y <= -500 * (this.datas.projects.length - 1)) {
@@ -518,6 +526,7 @@ export default {
 
   scrollTop() {
     this.isEnd = false
+    this.isSnapped = false
     if(!this.isMobile){
       gsap.to(this, { scroll : -4000, duration: 3, ease: Power2.easeInOut, onComplete: () => {
         this.scrollTarget = -2000

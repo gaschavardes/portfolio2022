@@ -259,7 +259,8 @@
         height: 10vh;
         opacity: 0;
     }
-    .scrollTop{
+    
+    .scrollTop, .visit-cta{
         z-index: 100;
         position: absolute;
         bottom: 20px;
@@ -307,6 +308,16 @@
         }
 
        
+    }
+    .visit-cta{
+        bottom: 100px;
+        text-decoration: none;
+        font-family: 'Oswald', sans-serif;
+        &.show{
+            .char{
+                transform: translateX(0%);
+            }
+        }
     }
     .drag-proxy{
         opacity: 0;
