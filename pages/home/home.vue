@@ -135,10 +135,11 @@ export default {
       if(this.isMobile){
         this.Mouse.on('drag', (e) => {
             // this.scrollListen(e)
-            this.initDraggable()
+            
           })
 
       }
+      this.initDraggable()
       this.Mouse.on('move', () => {
 
       })
