@@ -162,9 +162,9 @@ export default {
     //   })
     toggleAbout() {
       this.isAbout = !this.isAbout
-      // if(this.drag[0]){
-      //   this.isAbout ? this.drag[0].disable() : this.drag[0].enable()
-      // }
+      if(this.drag[0]){
+        this.isAbout ? this.drag[0].disable() : this.drag[0].enable()
+      }
     },
     spanify (text, inline, delay = 0.04 ) {
       const t = text.split(' ')
