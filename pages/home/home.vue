@@ -1,5 +1,5 @@
 <template>
-  <div class="tpl-home" @touchstart="launchMobileVid">
+  <div class="tpl-home" :class='{isAbout : isAbout }' @touchstart="launchMobileVid">
      <button class="about-btn" @click="toggleAbout">
       <span :class='{show : !isAbout && !isIntro }' v-html="spanify('about')"></span>
       <span :class='{show : isAbout && !isIntro }' v-html="spanify('close')"></span>
@@ -153,7 +153,7 @@ export default {
 
         }})
       } else {
-        gsap.fromTo(this.$refs.proxy, {y: -(this.datas.projects.length) * 500}, {y: 500, delay: 4, duration: 3, ease: Power2.easeInOut,
+        gsap.fromTo(this.$refs.proxy, {y: -(this.datas.projects.length) * 500}, {y: 500, delay: 2, duration: 3, ease: Power2.easeInOut,
         onUpdate: () => {
           this.isSnapped = false
           this.drag[0].update()
@@ -394,8 +394,16 @@ export default {
         },
         snap: {
           y: (endValue) => {
-            return Math.round(endValue / -500) * -500
+          let target;
+          if(this.drag[0].deltaY > 0) {
+            target = Math.floor(endValue / -500) * -500;
+          } else {
+            target = Math.ceil(endValue / -500) * -500;
           }
+          this.deltaPath = target - endValue
+          // this.drag[0].update()
+          return target;
+        },
         }
       })
     },
