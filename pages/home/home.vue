@@ -21,7 +21,7 @@
       </transition>
       </div>
       
-      <a class='projectLink' target='_blank' v-show='currentLink' :class="{show: currentLink}" :href="currentLink"></a>
+      <a class='projectLink' target='_blank' v-show='currentLink || (currentLinkCta && this.isSnapped)' :class="{show: currentLink || (currentLinkCta && this.isSnapped)}" :href="currentLink || currentLinkCta"></a>
     
       <button class="scroll-cta" @click="scrollTo" :class='{show : !scrollBegin && !isAbout }'>Scroll to the projects</button>
     </div>
@@ -146,14 +146,14 @@ export default {
       if(!this.isMobile){
         this.scrollTarget = 2500 * (this.datas.projects.length) 
         this.scroll = 2500 * (this.datas.projects.length) 
-        gsap.to(this, { scroll : -4000, delay: 2, duration: 3, ease: Power2.easeInOut, onComplete: () => {
+        gsap.to(this, { scroll : -4000, delay: 1, duration: 3, ease: Power2.easeInOut, onComplete: () => {
           this.scrollTarget = -2000
           this.scrollBegin = false
           this.isIntro = false
 
         }})
       } else {
-        gsap.fromTo(this.$refs.proxy, {y: -(this.datas.projects.length) * 500}, {y: 500, delay: 2, duration: 3, ease: Power2.easeInOut,
+        gsap.fromTo(this.$refs.proxy, {y: -(this.datas.projects.length) * 500}, {y: 500, delay: 1, duration: 3, ease: Power2.easeInOut,
         onUpdate: () => {
           this.isSnapped = false
           this.drag[0].update()
@@ -411,6 +411,9 @@ export default {
       this.isSnapped = (-this.drag[0].y / 500) % 1 === 0
       if(this.datas.projects[Math.floor((-this.drag[0].y / 500))]) {
         this.currentLinkCta = this.datas.projects[Math.floor((-this.drag[0].y / 500))].link
+      } else {
+        console.log('COUCOU', this.currentLinkCta)
+        this.currentLinkCta = undefined
       }
       if(this.drag[0].y > 400) {
         this.scrollBegin = false
@@ -476,7 +479,7 @@ export default {
     },
 
     move(e) {
-      if(this.isAbout) return
+      if(this.isAbout || this.isMobile) return
       this.mouse.set(2.0 * (e.x / this.Scene.renderer.width) - 1.0, 2.0 * (1.0 - e.y / this.Scene.renderer.height) - 1.0);
       this.raycast.castMouse(this.Scene.camera, this.mouse);
 
