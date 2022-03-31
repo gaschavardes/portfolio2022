@@ -383,7 +383,7 @@ export default {
         inertia: true,
         maxDuration:1.5,
         zIndexBoost: false,
-        throwResistance: 50000000,
+        throwResistance: 5000,
         zIndex: 0,
         dragResistance: 0.2,
         onThrowUpdate: () => {
