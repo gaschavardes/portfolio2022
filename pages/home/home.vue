@@ -9,13 +9,13 @@
       <h1 :class='{show : !scrollBegin || isAbout }' v-html="spanify('Gaspard Chavardes')"></h1>
       <p :class='{show : !scrollBegin || isAbout }' v-html="spanify('Creative developper', true, 0.02)">Creative developper</p>
       <transition name="fade" >
-        <div class="content" :class='{show : isAbout }' v-show="isMobile || isAbout">
+        <div class="content" :class='{show : isMobile && isAbout }' v-show="isMobile || isAbout">
           <div class="description" >
             <p> Hi there !</p>
-            <p> I'm Gaspard, a french creative developper working in Paris. I enjoy working on innovative projects that shape the way people see brands or institutions.</p>
+            <p> I'm Gaspard, a French creative developper working in Paris. I enjoy working on innovative projects that shape the way people see brands or institutions.</p>
             <p>Always reducing the gap between 3D immersive experiments and institutional or e-commerce websites in order to create an emotional impact while providing the best user experience possible.</p>
             <p>Currently working at Hands Agency, I had the chance to work previously at Hello Monday ands 84 Paris.</p>
-            <p>Feel free to <a href="mailto:chavardes.gaspard@gmail.com"> ping me </a> for some freelance work ! </p>
+            <p>Feel free to <a href="mailto:chavardes.gaspard@gmail.com"> ping me </a> for some freelance work! </p>
           </div>
         </div>
       </transition>
@@ -146,8 +146,8 @@ export default {
       if(!this.isMobile){
         this.scrollTarget = 2500 * (this.datas.projects.length) 
         this.scroll = 2500 * (this.datas.projects.length) 
-        gsap.to(this, { scroll : -3500, delay: 2, duration: 3, ease: Power2.easeInOut, onComplete: () => {
-          this.scrollTarget = -3500
+        gsap.to(this, { scroll : -4000, delay: 2, duration: 3, ease: Power2.easeInOut, onComplete: () => {
+          this.scrollTarget = -2000
           this.scrollBegin = false
           this.isIntro = false
 
@@ -352,8 +352,8 @@ export default {
         this.planes[i].video =  this.videos.length
         setTimeout(() => {
           let videoSize = this.$refs.projectVideo[0].getBoundingClientRect()
-          // planeProgram.uniforms.u_resolution.value = new Vec2(videoSize.width, videoSize.height)
-          mesh.scale.set(scale, scale * (videoSize.height / videoSize.width) , 1)
+          planeProgram.uniforms.u_resolution.value = new Vec2(1920, 1080)
+          mesh.scale.set(scale, scale * (1080 / 1920) , 1)
         
         }, 1000)
       } 
@@ -381,11 +381,11 @@ export default {
         trigger: this.$el,
         bounds: {minY: -500 * (this.datas.projects.length - 1), maxY: 500},
         inertia: true,
-        minDuration:1,
+        maxDuration:1.5,
         zIndexBoost: false,
-        throwResistance: 5000,
+        throwResistance: 50000000,
         zIndex: 0,
-        dragResistance: 0,
+        dragResistance: 0.2,
         onThrowUpdate: () => {
           this.dragUpdate()
         },

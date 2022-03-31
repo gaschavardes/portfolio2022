@@ -147,9 +147,20 @@
         }
 
         .content{
-            opacity: 0;
+            @media @mobile{
+                opacity: 0;
+            }
             transition: opacity 0.5s;
             height: 0;
+            margin-top: -70px;
+
+            @media @mobile {
+                margin-top: -50px;
+            }
+            p{
+                padding-top: 20px;
+                margin-top: 0;
+            }
              &.show{
                 opacity: 1;
                 height: auto;
@@ -201,7 +212,7 @@
             font-size: 100px;
             max-width: 600px;
             padding-top: 100px;
-
+            font-weight: 100;
             @media @mobile {
                 font-size: 70px;
                 padding-top: 75px;
@@ -229,8 +240,10 @@
         p{
             font-family: 'Oswald', sans-serif;
             font-size: 50px;
-            padding-top: 20px;
-
+            margin-top: -10px;
+            line-height: 2;
+            font-weight: 300;
+            padding-left: 5px;
             @media @mobile {
                 font-size: 40px;
             }

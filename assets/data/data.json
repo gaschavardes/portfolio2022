@@ -8,21 +8,21 @@
             "link": "https://airshifumi.hands.agency/"
         },
         {
-            "name": "Bompard Shoppable Experience",
-            "media": "bompard",
-            "type": "video",
-            "image": "airshifumi/airshifumi.png",
-            "link": "https://experience.eric-bompard.com/",
-            "content": {
-
-            }
-        },
-        {
             "name": "Palais de tokyo",
             "media": "palaisdetokyo",
             "type": "video",
             "image": "airshifumi/airshifumi.png",
             "link": "https://palaisdetokyo.com/",
+            "content": {
+
+            }
+        },
+        {
+            "name": "Bompard Shoppable Experience",
+            "media": "bompard",
+            "type": "video",
+            "image": "airshifumi/airshifumi.png",
+            "link": "https://experience.eric-bompard.com/",
             "content": {
 
             }
