@@ -14,7 +14,7 @@
             <p> Hi there !</p>
             <p> I'm Gaspard, a French creative developper working in Paris. I enjoy working on innovative projects that shape the way people see brands or institutions.</p>
             <p>Always reducing the gap between 3D immersive experiments and institutional or e-commerce websites in order to create an emotional impact while providing the best user experience possible.</p>
-            <p>Currently working at Hands Agency, I had the chance to work previously at Hello Monday ands 84 Paris.</p>
+            <p>Currently working at Hands Agency, I had the chance to work previously at Hello Monday and 84 Paris.</p>
             <p>Feel free to <a href="mailto:chavardes.gaspard@gmail.com"> ping me </a> for some freelance work! </p>
           </div>
         </div>
