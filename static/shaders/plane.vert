@@ -1,5 +1,5 @@
 precision highp float;
-
+attribute vec2 uv;
 attribute vec3 position;
 attribute vec2 uv;
 attribute vec3 normal;
